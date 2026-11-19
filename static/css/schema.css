@@ -57,3 +57,16 @@ button.ghost { background: transparent; }
 label { display:block; margin: 0.7rem 0; }
 input { width:100%; margin-top: 0.3rem; padding: 0.55rem 0.7rem; border-radius: 10px; border:1px solid var(--line); font: inherit; }
 .row { display:flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
+.chip-ok { background: var(--accent-soft); color: var(--accent); }
+.chip-bad { background: #f6d9d2; color: var(--danger); border:1px solid #e3b1a6; }
+.chip {
+  display:inline-block; padding: 0.1rem 0.55rem; border-radius: 999px;
+  background: var(--accent-soft); color: var(--accent); font-size: 0.8rem;
+}
+.chip.warn { background: #f6d9d2; color: var(--danger); border:1px solid #e3b1a6; }
+.pointer-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:0.8rem; }
+.versions { font-size: 0.9rem; line-height: 1.7; }
+.versions b { color: var(--accent); }
+.watermark { margin: 0.6rem 0; font-size: 0.95rem; }
+table.runs { width:100%; border-collapse: collapse; font-size: 0.9rem; }
+table.runs th, table.runs td { border-bottom:1px solid var(--line); padding:0.4rem 0.5rem; text-align:left; }

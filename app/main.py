@@ -9,7 +9,10 @@ from app.db import init_db
 from app.services import (
     apply_contract,
     list_contracts,
+    list_pointer_states,
+    list_repairs,
     list_reports,
+    repair_pointer,
     run_breaking_check,
     run_reconcile,
 )
@@ -40,6 +43,9 @@ def create_app(db_path: str | None = None) -> web.Application:
     app.router.add_post("/api/contracts/{cid}/apply", api_apply)
     app.router.add_get("/api/reconcile-reports", api_reports)
     app.router.add_post("/api/reconcile-reports", api_reconcile)
+    app.router.add_get("/api/pointers", api_pointers)
+    app.router.add_post("/api/pointers/repair", api_pointer_repair)
+    app.router.add_get("/api/repair-runs", api_repair_runs)
     return app
 
 
@@ -157,3 +163,31 @@ async def api_reconcile(request: web.Request):
         return json_resp({"report": run_reconcile(as_of, request.app.get("db_path"))})
     except ServiceError as exc:
         return json_resp({"error": exc.message}, exc.status_code)
+
+
+async def api_pointers(request: web.Request):
+    try:
+        require_user(request)
+    except ServiceError as exc:
+        return json_resp({"error": exc.message}, exc.status_code)
+    return json_resp({"items": list_pointer_states(request.app.get("db_path"))})
+
+
+async def api_pointer_repair(request: web.Request):
+    try:
+        require_user(request)
+        body = await request.json()
+        table_name = str(body.get("table_name") or "").strip()
+        return json_resp(
+            {"pointer": repair_pointer(table_name, request.app.get("db_path"))}
+        )
+    except ServiceError as exc:
+        return json_resp({"error": exc.message}, exc.status_code)
+
+
+async def api_repair_runs(request: web.Request):
+    try:
+        require_user(request)
+    except ServiceError as exc:
+        return json_resp({"error": exc.message}, exc.status_code)
+    return json_resp({"items": list_repairs(request.app.get("db_path"))})
